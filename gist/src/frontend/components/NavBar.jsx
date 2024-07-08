@@ -1,6 +1,29 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import { Link } from 'react-router-dom'
+import { uselogout } from '../hooks/useLogout'
+import { useDispatch, useSelector } from "react-redux";
 export default function NavBar() {
+
+// const [user,setUser]=useState(null)
+
+let user=useSelector((state)=>{
+    console.log('info is',state.user)
+    return state.user
+  })
+
+useEffect(()=>{
+    // setUser(JSON.parse(localStorage.getItem('user')) )
+    console.log(user)
+    user=JSON.parse(localStorage.getItem('user')) 
+},[])
+
+const {logout}=uselogout()
+
+async function  handleLogout(){
+
+    logout()
+}
+
   return (
     <>
     
@@ -11,11 +34,22 @@ export default function NavBar() {
             <img src="https://flowbite.com/docs/images/logo.svg" className="h-8" alt="Flowbite Logo" />
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
         </a>
-        <div className="flex items-center space-x-6 rtl:space-x-reverse">
-            <a href="tel:5541251234" className="text-sm  text-gray-500 dark:text-white hover:underline">(555) 412-1234</a>
+
+
+{user.email && ( 
+     <div className="flex items-center space-x-6 rtl:space-x-reverse">
+            <a href="tel:5541251234" className="text-sm  text-gray-500 dark:text-white hover:underline">{user.email}</a>
+            <Link to="/login" className="text-sm  text-blue-600 dark:text-blue-500 hover:underline" onClick={handleLogout}>Logout</Link>
+            
+        </div>)}
+        {!user.email && 
+        (  <div className="flex items-center space-x-6 rtl:space-x-reverse">
+            <a href="tel:5541251234" className="text-sm  text-gray-500 dark:text-white hover:underline">(111) NO user</a>
             <Link to="/login" className="text-sm  text-blue-600 dark:text-blue-500 hover:underline">Login</Link>
             <Link to="/signup" className="text-sm  text-blue-600 dark:text-blue-500 hover:underline">Sign Up</Link>
-        </div>
+        </div>)}
+      
+
     </div>
 </nav>
 <nav className="bg-gray-50 dark:bg-gray-700">
@@ -27,7 +61,11 @@ export default function NavBar() {
                 </li>
               
                 <li>
-                    <a href="#" className="text-gray-900 dark:text-white hover:underline">Features</a>
+                    <Link to="/edit1" className="text-gray-900 dark:text-white hover:underline">ADD Data</Link>
+                </li>
+
+                <li>
+                    <Link to="/mydata" className="text-gray-900 dark:text-white hover:underline">MY Data</Link>
                 </li>
             </ul>
         </div>

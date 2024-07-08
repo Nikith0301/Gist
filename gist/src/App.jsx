@@ -8,6 +8,9 @@ import SearchBar from "./frontend/components/SearchBar";
 import NavBar from "./frontend/components/NavBar";
 import SignUp from "./frontend/pages/SignUp";
 import Login from "./frontend/pages/Login";
+import Home from "./frontend/components/Home";
+import TextEditor1 from "./frontend/components/TextEditor1";
+import UserData from "./frontend/components/UserData";
 
 function App() {
   const edit = useSelector((state) => state.flag.value);
@@ -22,9 +25,11 @@ function App() {
       <BrowserRouter>
         <NavBar />
         <Routes>
-          <Route path="/" element={<SearchBar />} />
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/edit1" element={<TextEditor1 />} />
+          <Route path="/mydata" element={<UserData />} />
         </Routes>
       </BrowserRouter>
 

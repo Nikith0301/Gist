@@ -2,12 +2,17 @@ import React, { useState } from 'react'
 import { useDispatch,useSelector } from "react-redux";
 import { v4 as uuidv4 } from 'uuid';
 import { addToList, addToUsers, switchFlag,editName, pushToUsers } from '../../backend/store/editor-slice';
-export default function TextEditor() {
-let dispatch=useDispatch()
+import axios from 'axios';
 
+export default function TextEditor1() {
+let dispatch=useDispatch()
+let user=JSON.parse(localStorage.getItem('user')) ;
 const[input,setInput]=useState("");
-// const[name,setName]=useState("pranav")
-const user = useSelector((state) => state.user); 
+
+// const user = useSelector((state) => state.user); 
+// if(user.token){
+//     let token=
+// }
 const name=useSelector((state)=>state.name);
 
 function handleChange(e){
@@ -15,20 +20,23 @@ function handleChange(e){
     
 }
 
-function handlePush(){
-    console.log('name is',name)
-    dispatch(pushToUsers({name:name,oldData:user,data:[{id:uuidv4(),text:[input]}] }))
-    console.log(user)
-}
 
-function handleSubmit(){
+
+async function handleSubmit(){
 
 // dispatch(addToList(input))
 // dispatch(addToUsers({name:name,data:[input] }))
-dispatch(addToUsers({name:name,data:[{id:'007',text:[input]}] }))
+// dispatch(addToUsers({name:name,data:[{id:'007',text:[input]}] }))
 
-// setInput("")
-// console.log(text)
+let response= await axios.post('http://localhost:3001/notes',{text:input},
+    {
+        headers: {
+          Authorization: `Bearer ${user.token}`
+        }
+      }
+)
+
+console.log(response.data)
 
 }
 
@@ -119,7 +127,7 @@ function handleFlag(){
        Publish post
    </button>
    <button onClick={handleFlag}>TextArea</button>
-   <button onClick={handlePush}>Push data</button>
+   
 {/* </form> */}
 
     </>

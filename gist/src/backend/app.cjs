@@ -4,20 +4,21 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const User = require("./models/User.cjs");
+const Notes=require("./models/NoteModel.cjs")
 const jwt = require("jsonwebtoken");
-
-
+const notesRoute=require('./routes/note_routes.cjs')
+const {createNote,getNotes}=require('./controllers/NotesController.cjs')
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const dbURI = "mongodb+srv://nik:1234@cluster0.lpymyoj.mongodb.net/node-auth";
+const dbURI = process.env.MONGO_URI;
 // const dbUR = process.env.DB_URI;
 mongoose
   .connect(dbURI)
   .then(() => {
-    app.listen(3001, () => console.log("Server listening on port 3001"));
+    app.listen(process.env.PORT, () => console.log("Server listening on port 3001"));
   })
   .catch((err) => console.log(err));
 
@@ -25,13 +26,20 @@ mongoose
 //   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
 // };
 
+
+app.use('/notes',notesRoute)
+// app.get('/notes',getNotes)
+// app.post('/notes',createNote)
+
+
+
 const createToken = (_id) => {
   return jwt.sign({ _id }, "mysecret", { expiresIn: "2d" });
 };
 
-app.get("/home", (req, res) => {
-  res.send("this is home page");
-});
+// app.get("/home", (req, res) => {
+//   res.send("this is home page");
+// });
 
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -135,4 +143,5 @@ app.delete("/users/:id", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
